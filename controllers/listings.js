@@ -34,7 +34,11 @@ module.exports.showListings=async (req,res)=>
  module.exports.createListing=async (req,res)=>{
     // let{title,description,image,price ,country,location}=req.params;
   //using joi for server side schema validation 
-  let url=req.file.parth;
+  if(!req.file){
+     req.flash("error","please upload an image");
+     return res.redirect("/listings/new");
+  }
+  let url=req.file.path;
   let filename=req.file.filename;
    const newListing= new Listing(req.body.listing);
    newListing.owner=req.user._id;
@@ -61,7 +65,7 @@ module.exports.editListing=async (req,res)=>{
 //update listing
 module.exports.updateListing=async(req,res)=>{
    let{id}=req.params;
-   await  Listing.findByIdAndUpdate(id,{...req.body.listing});
+   let listing=await  Listing.findByIdAndUpdate(id,{...req.body.listing});
    if( typeof req.file!=="undefined"){
    let url=req.file.path;
    let filename=req.file.filename;

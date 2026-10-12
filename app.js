@@ -26,6 +26,9 @@ const dbURL = process.env.ATLASDB_URL;
 const sessionSecret = process.env.SECRET;
 const port = process.env.PORT || 8080;
 
+// Render sits behind a proxy -- needed for secure cookies in production
+app.set("trust proxy", 1);
+
 // Validate environment variables
 if (!dbURL) {
     throw new Error("ATLASDB_URL is missing from .env");
